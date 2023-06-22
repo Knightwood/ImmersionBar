@@ -44,6 +44,9 @@ ImmersionBar {
 immersionBar.reConfig {
 
 }.immersion()
+//导航栏，与状态栏是一样的配置方式，仅名字不同
+ImmersionNavBar{}
+
 ```
  */
 

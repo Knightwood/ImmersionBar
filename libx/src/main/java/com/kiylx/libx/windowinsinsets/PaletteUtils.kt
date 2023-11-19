@@ -15,7 +15,7 @@ fun FragmentActivity.detectBitmapColor(bitmap: Bitmap) {
     val left = 0
     val top = 0
     val right = getScreenWidth()
-    val bottom = getStatusBarHeight()
+    val bottom = getSystemBarInsetsIgnoringVisibility().top
 
     Palette
         .from(bitmap)

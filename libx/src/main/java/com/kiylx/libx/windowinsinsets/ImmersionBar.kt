@@ -50,19 +50,9 @@ ImmersionNavBar{}
 ```
  */
 
-/**
- * 表示主题类型
- * 系统或应用主题标识黑白
- * 状态栏或导航栏黑白主题下文字和图标是相反颜色
- */
-enum class ThemeType(val b: Boolean) {
-    LIGHT(true),//浅色
-    DARK(false),//深色
-}
-
 sealed class BaseConfig {
     /**
-     * 判断传入的状态栏[navBarColor]和导航栏[stateBarColor]的背景颜色是亮色还是暗色，
+     * 判断传入的状态栏[navBarColor]和导航栏[statusBarColor]的背景颜色是亮色还是暗色，
      * 由此决定状态栏和导航栏的前景色是黑色还是白色，而忽略[navBarType]和[stateBarType]
      * 但这个过程还受到系统主题的影响。
      */
@@ -323,7 +313,7 @@ class ImmersionBar(
         if (config.reverse) b = !b
 
         //根据背景色主题改变状态栏的前景色
-        stateBarTheme(if (b) ThemeType.LIGHT else ThemeType.DARK)
+        statusBarTheme(if (b) ThemeType.LIGHT else ThemeType.DARK)
     }
 }
 
@@ -332,10 +322,12 @@ class ImmersionBar(
 /**
  * 默认是浅色主题
  */
+@Deprecated(message = "用quickImmersion取代", replaceWith = ReplaceWith("this quickImmersion {}"))
 inline infix fun Fragment.ImmersionBar(block: StateBarConfig.() -> Unit): ImmersionBar {
     return requireActivity().ImmersionBar(block)
 }
 
+@Deprecated(message = "用quickImmersion取代", replaceWith = ReplaceWith("this quickImmersion {}"))
 fun Fragment.ImmersionBar(): ImmersionBar {
     return this ImmersionBar {}
 }
@@ -343,12 +335,14 @@ fun Fragment.ImmersionBar(): ImmersionBar {
 /**
  * 默认是浅色主题
  */
+@Deprecated(message = "用quickImmersion取代", replaceWith = ReplaceWith("this quickImmersion {}"))
 inline infix fun FragmentActivity.ImmersionBar(block: StateBarConfig.() -> Unit): ImmersionBar {
     val config = StateBarConfig()
     config.block()
     return ImmersionBar(this, config)
 }
 
+@Deprecated(message = "用quickImmersion取代", replaceWith = ReplaceWith("this quickImmersion {}"))
 fun FragmentActivity.ImmersionBar(): ImmersionBar {
     return this ImmersionBar {}
 }
@@ -359,10 +353,12 @@ fun FragmentActivity.ImmersionBar(): ImmersionBar {
 /**
  * 默认是浅色主题
  */
+@Deprecated(message = "用quickImmersion取代", replaceWith = ReplaceWith("this quickImmersion {}"))
 inline infix fun Fragment.ImmersionNavBar(block: NavBarConfig.() -> Unit): NavBarImmersion {
     return requireActivity().ImmersionNavBar(block)
 }
 
+@Deprecated(message = "用quickImmersion取代", replaceWith = ReplaceWith("this quickImmersion {}"))
 fun Fragment.ImmersionNavBar(): NavBarImmersion {
     return this ImmersionNavBar {}
 }
@@ -370,12 +366,14 @@ fun Fragment.ImmersionNavBar(): NavBarImmersion {
 /**
  * 默认是浅色主题
  */
+@Deprecated(message = "用quickImmersion取代", replaceWith = ReplaceWith("this quickImmersion {}"))
 inline infix fun FragmentActivity.ImmersionNavBar(block: NavBarConfig.() -> Unit): NavBarImmersion {
     val config = NavBarConfig()
     config.block()
     return NavBarImmersion(this, config)
 }
 
+@Deprecated(message = "用quickImmersion取代", replaceWith = ReplaceWith("this quickImmersion {}"))
 fun FragmentActivity.ImmersionNavBar(): NavBarImmersion {
     return this ImmersionNavBar {}
 }

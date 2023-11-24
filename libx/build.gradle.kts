@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("maven-publish")
+
 }
 
 android {
@@ -30,6 +32,19 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = "com.github.knightwood"
+                artifactId = "ImmersionBar"
+                version = "1.0"
+                from(components.getByName("release"))
+                //artifact(tasks.getByName("bundleReleaseAar"))
+            }
+        }
     }
 }
 

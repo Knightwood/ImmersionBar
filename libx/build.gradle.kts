@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.kiylx.libx"
+    namespace = "com.kiylx.libx.windowinsinsets"
     compileSdk = 34
 
     defaultConfig {

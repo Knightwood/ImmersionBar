@@ -4,15 +4,16 @@ plugins {
 }
 
 android {
-    compileSdk = Android.compileSdk
-    defaultConfig {
-        applicationId = Android.appId
-        minSdk = Android.minSdk
-        targetSdk = Android.targetSdk
-        versionCode = Android.versionCode
-        versionName = Android.versionName
+    compileSdk = 34
+    namespace = "com.kiylx.immersionbar"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    defaultConfig {
+        applicationId = "com.kiylx.immersionbar"
+        minSdk = 26
+        targetSdk = 32
+        versionCode = 1
+        versionName = "1.0"
+
     }
 
     buildTypes {
@@ -40,8 +41,4 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation(project(path = ":libx"))
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-
 }

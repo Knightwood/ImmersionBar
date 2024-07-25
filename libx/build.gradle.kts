@@ -11,9 +11,7 @@ android {
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 32
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -38,9 +36,9 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("maven") {
-                groupId = "com.github.knightwood"
+                groupId = "com.github.Knightwood"
                 artifactId = "ImmersionBar"
-                version = "1.0"
+                version = "1.01"
                 from(components.getByName("release"))
                 //artifact(tasks.getByName("bundleReleaseAar"))
             }
@@ -52,10 +50,6 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-
     //取色
-    implementation(Common.palette)
+    implementation("androidx.palette:palette:1.0.0")
 }

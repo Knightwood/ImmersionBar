@@ -38,7 +38,7 @@ afterEvaluate {
             create<MavenPublication>("maven") {
                 groupId = "com.github.Knightwood"
                 artifactId = "ImmersionBar"
-                version = "1.01"
+                version = "1.2"
                 from(components.getByName("release"))
                 //artifact(tasks.getByName("bundleReleaseAar"))
             }

@@ -31,19 +31,13 @@ WindowInsetsCompat.Type.systemBars()  //状态栏、导航栏和标题栏
 * */
 
 //<editor-fold desc="沉浸快速方法">
-/**
- * onConfigurationChanged(Configuration newConfig)：当系统的配置信息发生改变时，系统会调用此方法。
- * 注意，只有在配置文件 AndroidManifest 中处理了 configChanges属性
- * 对应的设备配置，该方法才会被调用。 如果发生设备配置与在配置文件中设置的不一致，则Activity会被销毁并使用新的配置重建。
- */
-fun FragmentActivity.listenConfigurationChanged(func: (t: Configuration) -> Unit) {
-    val configChangedListener = Consumer<Configuration> { t: Configuration ->
-        func(t)
-    }
-    this.addOnConfigurationChangedListener(configChangedListener)
-}
+
 
 /**
+ * 使用ViewCompat.setOnApplyWindowInsetsListener得到insets信息
+ *
+ * 注意多次调用ViewCompat.setOnApplyWindowInsetsListener会替换掉旧的
+ *
  * @param consumed 是否消费掉insets分发事件，致使不在向下传递。
  */
 fun Activity.quickImmersion(
@@ -57,6 +51,11 @@ fun Activity.quickImmersion(
     fitSystemBarInsets(view, consumed, func)
 }
 
+/**
+ * 直接读取系统的insets信息，可能不够准确
+ * @param ignoringVisibility true：即使状态栏、导航栏隐藏，依旧获取原始高度
+ * func 直接是用即可，不需要额外包裹在doOnAttach中
+ */
 fun Activity.quickImmersion(
     ignoringVisibility: Boolean = false,
     func: (insets: Insets) -> Unit,
@@ -68,6 +67,8 @@ fun Activity.quickImmersion(
 }
 
 /**
+ * 直接读取系统的insets信息，可能不够准确
+ * @param ignoringVisibility true：即使状态栏、导航栏隐藏，依旧获取原始高度
  * func 直接是用即可，不需要额外包裹在doOnAttach中
  */
 fun Fragment.quickImmersion(
@@ -75,27 +76,14 @@ fun Fragment.quickImmersion(
     func: (insets: Insets) -> Unit,
 ) {
     //状态栏和导航栏主题
-    val themeType = requireActivity().adjustAppUiMode()
+    val themeType = adjustAppUiMode()
     systemBarTheme(themeType)
     //将内容扩展到全屏
-    requireActivity().edgeToEdge()
+    edgeToEdge()
     //读取insets
     fitSystemBarInsets(ignoringVisibility, func)
 }
 
-fun Fragment.fitSystemBarInsets(
-    ignoringVisibility: Boolean = false,
-    func: (insets: Insets) -> Unit,
-) {
-    val w = requireActivity().window
-    requireActivity().findViewById<FrameLayout>(android.R.id.content).doOnAttach {
-        if (ignoringVisibility) {
-            func(w.getSystemBarInsetsIgnoringVisibility())
-        } else {
-            func(w.getSystemBarInsets())
-        }
-    }
-}
 
 //</editor-fold>
 
@@ -109,6 +97,12 @@ fun Activity.edgeToEdge() {
     window.navigationBarColor = Color.TRANSPARENT
 }
 
+fun Fragment.edgeToEdge() {
+    requireActivity().edgeToEdge()
+}
+//</editor-fold>
+
+//<editor-fold desc="insets处理">
 /**
  * 与 View 的事件分发一样，WindowInsets 的分发也是 N 叉树的遍历过程： 从 N 叉树的根节点（DecoView）开始，按照
  * 深度优先 的方式分发给 子 view。 Android 10 和 Android 11 两个版本官方连续修改了
@@ -178,7 +172,12 @@ fun Activity.fitSystemBarInsets(
 
 }
 
-
+fun Fragment.fitSystemBarInsets(
+    ignoringVisibility: Boolean = false,
+    func: (insets: Insets) -> Unit,
+) {
+    requireActivity().fitSystemBarInsets(ignoringVisibility, func)
+}
 //</editor-fold>
 
 /**
@@ -352,6 +351,10 @@ fun Activity.adjustAppUiMode(): ThemeType {
     }
 }
 
+fun Fragment.adjustAppUiMode(): ThemeType {
+    return requireActivity().adjustAppUiMode()
+}
+
 /**
  * 判断系统主题
  */
@@ -441,6 +444,17 @@ fun Activity.isSupportNavBar(): Boolean {
 
 // <editor-fold desc="其他">
 
+/**
+ * onConfigurationChanged(Configuration newConfig)：当系统的配置信息发生改变时，系统会调用此方法。
+ * 注意，只有在配置文件 AndroidManifest 中处理了 configChanges属性
+ * 对应的设备配置，该方法才会被调用。 如果发生设备配置与在配置文件中设置的不一致，则Activity会被销毁并使用新的配置重建。
+ */
+fun FragmentActivity.listenConfigurationChanged(func: (t: Configuration) -> Unit) {
+    val configChangedListener = Consumer<Configuration> { t: Configuration ->
+        func(t)
+    }
+    this.addOnConfigurationChangedListener(configChangedListener)
+}
 
 /**
  * 获取屏幕中的insets信息， Insets 对象拥有 4 个 int 值，用于描述显示区域矩形四个边的偏移：

@@ -1,3 +1,19 @@
+## 2.0.0
+
+```kotlin
+
+dependencies {
+    implementation("com.github.knightwood.android.accompanist:dialog-helper:2.0.0")
+    implementation("com.github.knightwood.android.accompanist:window-insets-helper:2.0.0")
+}
+```
+
+
+
+
+
+---
+
 ## 使用：
 
 [![](https://jitpack.io/v/Knightwood/ImmersionBar.svg)](https://jitpack.io/#Knightwood/ImmersionBar)
@@ -12,12 +28,12 @@ Add it in your root build.gradle at the end of repositories:
 			maven { url 'https://jitpack.io' }
 		}
 	}
- Step 2. Add the dependency
+
+Step 2. Add the dependency
 
 	dependencies {
-	        implementation 'com.github.Knightwood:ImmersionBar:Tag'
+	        implementation 'com.github.Knightwood:ImmersionBar:1.2'
 	}
- 
 
 新方式：
 
@@ -77,12 +93,6 @@ getSystemBarInsets()
 //更改屏幕亮度，范围为0~1.0,1.0时为最亮，-1为系统默认设置
 windowBrightness=0.5
 ```
-
-
-
-
-
-
 
 旧方式：
 

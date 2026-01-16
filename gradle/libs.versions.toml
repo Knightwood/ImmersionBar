@@ -1,0 +1,99 @@
+# 各平台都需要的依赖
+[versions]
+# kotlin
+kotlin = "2.2.10"
+coroutines = "1.10.1"
+agp = "8.10.0"
+androidTools = "31.4.0"
+android-minSdk = "26"
+android-targetSdk = "34"
+android-compileSdk = "36"
+#定义compose bom version
+bom="2025.12.00"
+androidx_core = "1.17.0"
+appcompat = "1.7.0"
+fragment-ktx = "1.8.9"
+activity-ktx = "1.11.0"
+androidx_work = "2.8.1"
+annotation = "1.8.2"
+androidx-lifecycle = "2.9.0"
+androidx-navigation = "2.8.5"
+
+google_material = "1.13.0"
+androidx_constraintLayout = "2.1.4"
+activity_compose_version = "1.11.0"
+
+
+[libraries]
+# AndroidX核心库
+androidx-appCompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx_core" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment-ktx" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx_work" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "bom" }
+
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity_compose_version" }
+
+google-material = { module = "com.google.android.material:material", version.ref = "google_material" }
+androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx_constraintLayout" }
+
+#lifecycle
+androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+
+#viewmodel
+androidx-lifecycle-viewmodel = { module="androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-savestate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle" }
+
+# navigation2
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+
+compose-icon-core = { module = "androidx.compose.material:material-icons-core", version = "1.7.8" }
+compose-icon-extended = { module = "androidx.compose.material:material-icons-extended", version = "1.7.8" }
+
+kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.1" }
+
+
+# ###########################################compose bom库###################################
+# 引入bom之后，可以直接引入这里的依赖，他们都不指定版本号以使用bom中的版本号
+bom-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+bom-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+bom-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+bom-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+bom-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+bom-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+bom-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+bom-androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+bom-androidx-compose-runtime-saveable = { group = "androidx.compose.runtime", name = "runtime-saveable" }
+
+# ###########################################compose bom库###################################
+
+
+[plugins]
+# application和library插件
+application = { id = "com.android.application", version.ref = "agp" }
+library = { id = "com.android.library", version.ref = "agp" }
+
+# compose编译器
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+# kotlin
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+# 多平台库发布插件 0.35.0要求gradle 8.13、agp 8.2.2
+vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.35.0" }
+
+[bundles]
+kotlins-android = ["kotlin-coroutines-core", "kotlin-coroutines-android"]
+bundleAndroidx = [
+    "androidx-appCompat", "androidx-core-ktx",
+    "androidx-fragment-ktx", "androidx-activity-ktx",
+    "androidx-lifecycle", "androidx-lifecycle-viewmodel", "androidx-lifecycle-viewmodel-savestate",
+    "androidx-constraintLayout"
+]

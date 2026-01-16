@@ -1,29 +1,38 @@
 package com.kiylx.immersionbar
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.core.view.updatePadding
+import androidx.fragment.app.FragmentActivity
 import com.kiylx.libx.windowinsinsets.ThemeType
 import com.kiylx.libx.windowinsinsets.quickImmersion
 import com.kiylx.libx.windowinsinsets.statusBarTheme
+import com.kiylx.immersionbar.databinding.ActivityMainBinding
+import com.kiylx.immersionbar.dialog_example.DialogExampleActivity
 
-class MainActivity : AppCompatActivity() {
-    lateinit var content: View
+
+class MainActivity : FragmentActivity() {
+    lateinit var content: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        content=findViewById(android.R.id.content)
-
+        content = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(content.root)
+        content.btnDialog.setOnClickListener {
+            DialogExampleActivity.start(this)
+        }
 //        quickImmersion(window.decorView, false) {
 //            content.updatePadding(top = it.top)
 //        }
 
         //另一种方式：
         quickImmersion(ignoringVisibility = false) {
-            content.updatePadding(top = it.top)
+            content.root.updatePadding(top = it.top)
         }
         //将状态栏设置为浅色主题，将得到深色的文字和图标
         statusBarTheme(ThemeType.LIGHT)

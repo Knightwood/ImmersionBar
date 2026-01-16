@@ -1,37 +1,13 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.vanniktech.mavenPublish)
     alias(libs.plugins.compose.compiler)
+    id("inner.plugin.publish")
 }
 
 android {
-    compileSdk = 36
-    namespace = "com.kiylx.immersionbar"
-
-    defaultConfig {
-        applicationId = "com.kiylx.immersionbar"
-        minSdk = 26
-        targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
-
-    }
-
-    buildTypes {
-        named("release") {
-            isMinifyEnabled = false
-            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"))
-        }
-    }
-    buildFeatures {
-        viewBinding = true
-        //dataBinding = true
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+    namespace = "android.accompanist.dialoghelper"
 }
 
 dependencies {
@@ -44,10 +20,6 @@ dependencies {
         exclude("androidx.core", "core")
         exclude("androidx.recyclerview", "recyclerview")
     }
-
-    implementation(project(path = ":window-insets-helper"))
-    implementation(project(path = ":dialog-helper"))
-
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

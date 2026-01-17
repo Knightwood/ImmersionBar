@@ -1,19 +1,12 @@
 package com.kiylx.immersionbar
 
-import android.app.Activity
 import android.os.Bundle
-import android.view.View
-import android.widget.FrameLayout
-import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import com.kiylx.libx.windowinsinsets.ThemeType
 import com.kiylx.libx.windowinsinsets.quickImmersion
 import com.kiylx.libx.windowinsinsets.statusBarTheme
 import com.kiylx.immersionbar.databinding.ActivityMainBinding
-import com.kiylx.immersionbar.dialog_example.DialogExampleActivity
 
 
 class MainActivity : FragmentActivity() {

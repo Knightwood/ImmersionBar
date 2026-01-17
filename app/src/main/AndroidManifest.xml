@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.kiylx.immersionbar">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.kiylx.immersionbar">
 
     <application
         android:allowBackup="true"
@@ -18,14 +18,21 @@
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="" />
+                android:value=""/>
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".dialog_example.DialogExampleActivity"/>
+        <activity android:name=".DialogExampleActivity"/>
+        <activity android:name=".dialog_example.TransparentExampleActivity"
+                  android:theme="@style/Theme.Notex.Material3.Transparent"
+
+        />
+        <activity android:name=".dialog_example.BlurActivity1"
+                  android:theme="@style/Theme.BlurryDialog"
+        />
     </application>
 
 </manifest>

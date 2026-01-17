@@ -69,7 +69,7 @@ open class Publish2 : Plugin<org.gradle.api.Project> {
                         repositories {
                             maven {
                                 name = "MyLocalMaven"
-                                url = uri("F:/.m2/repository3")
+                                url = uri("F:/.m2/repository")
                             }
                         }
 

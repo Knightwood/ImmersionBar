@@ -20,7 +20,7 @@ dependencies {
         exclude("androidx.core", "core")
         exclude("androidx.recyclerview", "recyclerview")
     }
-
+    implementation("com.android.support:support-annotations:28.0.0")
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bom.androidx.ui)

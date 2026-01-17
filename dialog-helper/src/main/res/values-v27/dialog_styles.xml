@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/apk/res-auto">
-
+<resources>
     <style name="BaseFullscreenDialog" parent="Theme.Material3.DayNight.Dialog">
         <!--这四个配置是android:Theme.Material.NoActionBar.Fullscreen中的-->
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <!--使用此标志会导致真全屏，状态栏会隐藏，不使用此标志也能全屏，因此没必要使用此标志-->
-<!--        <item name="android:windowFullscreen">true</item>-->
+        <!--        <item name="android:windowFullscreen">true</item>-->
         <item name="android:windowContentOverlay">@null</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -15,11 +14,12 @@
         <item name="android:fitsSystemWindows">false</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item><!--api 27以上-->
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <!-- 设置对话框进入和退出动画 -->
-<!--        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>-->
-<!--        <item name="android:windowExitAnimation">@anim/dialog_out</item>-->
+        <!--        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>-->
+        <!--        <item name="android:windowExitAnimation">@anim/dialog_out</item>-->
     </style>
 </resources>

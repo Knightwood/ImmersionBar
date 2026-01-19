@@ -15,14 +15,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
-import android.accompanist.dialoghelper.component.setContentView
-import android.accompanist.dialoghelper.utils.MaterialAlertDialogBuilder2
+import android.accompanist.dialoghelper.fragment.ComposeDialogFragment
+import android.accompanist.dialoghelper.utils.dsl
+import android.accompanist.dialoghelper.utils.setContentView
+import android.accompanist.dialoghelper.utils.setView
+import android.accompanist.dialoghelper.utils.setInputView
 import android.accompanist.dialoghelper.utils.withBinding
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
+import androidx.core.widget.addTextChangedListener
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kiylx.immersionbar.dialog_example.BlurActivity1
 import com.kiylx.immersionbar.dialog_example.FullScreenExampleDialog
 import com.kiylx.immersionbar.dialog_example.FullScreenExampleDialogFragment
 import com.kiylx.immersionbar.dialog_example.TransparentExampleActivity
 import com.kiylx.immersionbar.databinding.DialogMainBinding
+import com.google.android.material.R as MaterialR
 
 class DialogExampleActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,70 +47,256 @@ class DialogExampleActivity : FragmentActivity() {
         enableEdgeToEdge()
         setContent {
             MaterialTheme() {
+                val scrollState = rememberScrollState()
                 Scaffold() { insets ->
-                    Column(modifier = Modifier.padding(insets)) {
-                        BasicButton("FullScreenDialog1") {
-                            val dialog = FullScreenExampleDialog(this@DialogExampleActivity)
-                            dialog.show()
-                        }
-                        BasicButton("FullScreenDialogFragment") {
-                            val dialog = FullScreenExampleDialogFragment()
-                            dialog.show(supportFragmentManager, "FullScreenDialogFragment")
-                        }
-                        BasicButton("MaterialAlertDialog") {
-                            MaterialAlertDialogBuilder2(this@DialogExampleActivity)
-                                .dsl {
-                                    setTitle("标题")
-                                    setMessage("内容")
-                                    setPositiveButton("确定") { dialog, _ ->
-                                        dialog.dismiss()
-                                    }
-                                    setComposeUI {
-                                        Text("Compose内容")
-                                    }
-                                }.create().show()
-                        }
-
-                        BasicButton("Dialog view binding测试") {
-                            val dialog = MaterialAlertDialogBuilder2(this@DialogExampleActivity)
-                                .setTitle("标题")
-                                .setMessage("内容")
-                                .setView(R.layout.dialog_main)
-                                .setPositiveButton("确定") { dialog, _ ->
-                                    dialog.dismiss()
-                                }.create()
-                            dialog.show()
-                            dialog.withBinding<DialogMainBinding>(
-                                R.id.dialog_root
-                            ) {
-                                tv1.text = "微软"
-                            }
-                        }
+                    Column(
+                        modifier = Modifier
+                            .padding(insets)
+                            .verticalScroll(scrollState)
+                    ) {
+                        FullScreenDialog1()
+                        FullScreenDialogFragment()
+                        MaterialAlertDialogComposeUi()
+                        ViewBindingTest()
+                        ViewBindingTest2()
+                        DialogSetInputView()
+                        DialogFragmentComposeUi()
                         BasicButton("透明Activity") {
                             TransparentExampleActivity.Companion.start(this@DialogExampleActivity)
                         }
                         BasicButton("磨砂Activity") {
                             BlurActivity1.Companion.start(this@DialogExampleActivity)
                         }
-                        BasicButton("？？？") {
-                            val dialog = ComponentDialog(this@DialogExampleActivity)
-                            //dialog的setContentView可以不在onCreate中调用
-                            //只要在show方法调用之前调用就行
-                            dialog.setContentView {
-                                Text("？？？")
-                            }
-                            dialog.show()
-                        }
+                        setContentViewNotInOnCreate()
+                        HorizontalDivider()
+                        MaterialAlertDialogStyles()
                     }
                 }
             }
         }
     }
+    //<editor-fold desc="ComponentDialog">
+    /**
+     * 在onCreate方法外调用setContentView
+     */
+    @Composable
+    private fun setContentViewNotInOnCreate() {
+        BasicButton("ComponentDialog setContentView") {
+            val dialog = ComponentDialog(this@DialogExampleActivity)
+            //dialog的setContentView可以不在onCreate中调用
+            //只要在show方法调用之前调用就行
+            dialog.setContentView {
+                Text("？？？")
+            }
+            dialog.show()
+        }
+    }
+
+    @Composable
+    private fun FullScreenDialog1() {
+        BasicButton("FullScreenDialog1") {
+            val dialog = FullScreenExampleDialog(this@DialogExampleActivity)
+            dialog.show()
+        }
+    }
+
+    //</editor-fold>
+    //<editor-fold desc="MaterialAlertDialogBuilder">
+    @Composable
+    private fun MaterialAlertDialogStyles() {
+        Text("MaterialAlertDialog样式")
+        SelectMaterialAlertDialogStyle(onClick = { styleId ->
+            MaterialAlertDialogBuilder(this@DialogExampleActivity, styleId)
+                .dsl {
+                    setTitle("标题")
+                    setIcon(R.drawable.baseline_wifi_24)
+                    setMessage("内容")
+                    setPositiveButton("确定") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    setNegativeButton("取消", null)
+                }.show()
+        })
+    }
+
+    @Composable
+    private fun DialogSetInputView() {
+        BasicButton("输入框Dialog") {
+            val dialog = MaterialAlertDialogBuilder(this@DialogExampleActivity)
+                .setTitle("标题")
+                .setMessage("内容")
+                .setInputView {
+                    this.textInputText.setText("默认值")
+                    this.textInputText.addTextChangedListener {
+
+                    }
+                }
+                .setPositiveButton("确定") { dialog, _ ->
+                    dialog.dismiss()
+                }.show()
+        }
+    }
+
+    @Composable
+    private fun ViewBindingTest() {
+        BasicButton("MaterialAlertDialogViewBinding测试1") {
+            val dialog = MaterialAlertDialogBuilder(this@DialogExampleActivity)
+                .setTitle("标题")
+                .setMessage("内容")
+                .setView(R.layout.dialog_main)
+                .setPositiveButton("确定") { dialog, _ ->
+                    dialog.dismiss()
+                }.create()
+            dialog.show()
+            dialog.withBinding<DialogMainBinding>(
+                R.id.dialog_root
+            ) {
+                tv1.text = "微软"
+            }
+        }
+    }
+
+    /**
+     * 直接使用ViewBinding加载布局并设置给弹窗
+     * 使用自定义弹窗主题
+     */
+    @Composable
+    private fun ViewBindingTest2() {
+        BasicButton("MaterialAlertDialogViewBinding测试2") {
+            val dialog = MaterialAlertDialogBuilder(
+                this@DialogExampleActivity,
+                android.accompanist.dialoghelper.R.style.MaterialAlertDialogStyle1
+            )
+                .setTitle("标题")
+                .setMessage("内容")
+                .setView<DialogMainBinding> {
+                    tv1.text = "微软"
+                }
+                .setPositiveButton("确定") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setNegativeButton("取消", null)
+                .show()
+        }
+    }
+
+    @Composable
+    private fun MaterialAlertDialogComposeUi() {
+        BasicButton("MaterialAlertDialog") {
+            MaterialAlertDialogBuilder(this@DialogExampleActivity)
+                .dsl {
+                    setTitle("标题")
+                    setMessage("内容")
+                    setPositiveButton("确定") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    setView {
+                        Text("Compose内容")
+                    }
+                }.create().show()
+        }
+    }
+
+    //</editor-fold>
+    //<editor-fold desc="DialogFragment">
+    /**
+     * 全屏的DialogFragment
+     */
+    @Composable
+    private fun FullScreenDialogFragment() {
+        BasicButton("FullScreenDialogFragment") {
+            val dialog = FullScreenExampleDialogFragment()
+            dialog.show(supportFragmentManager, "FullScreenDialogFragment")
+        }
+    }
+
+    /**
+     * 不用继承DialogFragment，
+     * new DialogFragment之后直接设置composeUI
+     */
+    @Composable
+    private fun DialogFragmentComposeUi() {
+        BasicButton("设置composeUI") {
+            val dialog = ComposeDialogFragment()
+            dialog.setContentView {
+                Text("Compose内容")
+            }
+            dialog.show(supportFragmentManager, "ComposeDialogFragment")
+        }
+    }
+    //</editor-fold>
+
 
     companion object {
         fun start(activity: Context) {
             val intent = Intent(activity, DialogExampleActivity::class.java)
             activity.startActivity(intent)
+        }
+    }
+}
+
+@Composable
+fun SelectMaterialAlertDialogStyle(onClick: (styleId: Int) -> Unit) {
+    val menus = remember {
+        mutableStateListOf(
+            MaterialR.style.MaterialAlertDialog_Material3,
+            MaterialR.style.MaterialAlertDialog_Material3_Title_Icon,
+            MaterialR.style.MaterialAlertDialog_Material3_Title_Icon_CenterStacked,
+            MaterialR.style.MaterialAlertDialog_Material3_Title_Panel,
+            MaterialR.style.MaterialAlertDialog_Material3_Title_Panel_CenterStacked,
+            MaterialR.style.MaterialAlertDialog_Material3_Title_Text,
+            MaterialR.style.MaterialAlertDialog_Material3_Title_Text_CenterStacked,
+        )
+    }
+    val selectedStyleId = remember { mutableIntStateOf(MaterialR.style.MaterialAlertDialog_Material3) }
+    Column {
+        menus.forEach { styleId ->
+            RadioText(
+                text = materialAlertDialogStyleName(styleId),
+                selected = styleId == selectedStyleId.intValue,
+                onClick = {
+                    selectedStyleId.intValue = styleId
+                    onClick(styleId)
+                }
+            )
+        }
+    }
+}
+
+fun materialAlertDialogStyleName(styleId: Int): String {
+    return when (styleId) {
+        MaterialR.style.MaterialAlertDialog_Material3 -> "Material3"
+        MaterialR.style.MaterialAlertDialog_Material3_Title_Icon -> "Material3_Title_Icon"
+        MaterialR.style.MaterialAlertDialog_Material3_Title_Icon_CenterStacked -> "Material3_Title_Icon_CenterStacked"
+        MaterialR.style.MaterialAlertDialog_Material3_Title_Panel -> "Material3_Title_Panel"
+        MaterialR.style.MaterialAlertDialog_Material3_Title_Panel_CenterStacked -> "Material3_Title_Panel_CenterStacked"
+        MaterialR.style.MaterialAlertDialog_Material3_Title_Text -> "Material3_Title_Text"
+        MaterialR.style.MaterialAlertDialog_Material3_Title_Text_CenterStacked -> "Material3_Title_Text_CenterStacked"
+        else -> {
+            throw IllegalArgumentException("Unknown styleId: $styleId")
+        }
+    }
+}
+
+@Composable
+fun RadioText(text: String, selected: Boolean, onClick: () -> Unit) {
+    Surface(
+        modifier = Modifier,
+        shape = MaterialTheme.shapes.medium,
+        color = if (selected) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surface,
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = text,
+                modifier = Modifier,
+                style = MaterialTheme.typography.bodyLarge,
+                color = if (selected) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
+            )
+            RadioButton(selected = selected, onClick = onClick)
         }
     }
 }

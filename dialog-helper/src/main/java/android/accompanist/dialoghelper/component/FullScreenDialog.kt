@@ -1,8 +1,9 @@
 package android.accompanist.dialoghelper.component
 
 import android.R
-import android.app.AlertDialog
-import android.app.Dialog
+import android.accompanist.dialoghelper.utils.DialogFullScreenHelper
+import android.accompanist.dialoghelper.utils.ViewHelpers
+import android.accompanist.dialoghelper.utils.isMatchParent
 import android.content.Context
 import android.util.Log
 import android.view.KeyEvent
@@ -12,16 +13,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.activity.ComponentDialog
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
-import android.accompanist.dialoghelper.utils.DialogFullScreenHelper
-import android.accompanist.dialoghelper.utils.ViewHelpers
-import android.accompanist.dialoghelper.utils.WindowSecureFlagPolicy
-import android.accompanist.dialoghelper.utils.backgroundDim
-import android.accompanist.dialoghelper.utils.isMatchParent
-import android.accompanist.dialoghelper.utils.setSecureFlag
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import androidx.fragment.app.Fragment
 
 private const val TAG = "FullScreenDialog"
 internal typealias ComposeUI = @Composable () -> Unit
@@ -155,64 +146,4 @@ open class FullScreenDialog(context: Context) : ComponentDialog(context) {
         }
         return super.onKeyUp(keyCode, event)
     }
-}
-
-
-/**
- *@param dim  0-1 之间 如果设置为1 就是全黑色了
- */
-fun Dialog.backgroundDim(dim: Float = 0.5f) {
-    window?.backgroundDim(dim)
-}
-
-/**
- * 为什么接受者类型是ComponentDialog而不是Dialog：
- * ComposeView需要向上找到一个有LifecycleOwner tag的view，获取到Lifecycle
- * 也就是调用如下代码
- * window!!.decorView.setViewTreeLifecycleOwner(this)
- * 然而，Dialog根本没有实现LifecycleView，他的decorView也就没有设置LifecycleOwner这个tag
- *
- */
-fun ComponentDialog.setContentView(
-    lp: ViewGroup.LayoutParams = ViewGroup.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.MATCH_PARENT
-    ),
-    composeUI: @Composable () -> Unit,
-) {
-    //弹窗默认有一个白色背景，设置Compose视图，这个白色背景很碍事
-    transparentBackground()
-    val root = ComposeView(context).apply {
-        setContent {
-            composeUI()
-        }
-    }
-    setContentView(root, lp)
-}
-
-fun AlertDialog.setComposeUI(ui: ComposeUI) {
-    setView(ComposeView(context).apply {
-        setContent {
-            ui()
-        }
-    })
-}
-
-
-fun Dialog.setSecureFlag(flag: Int = WindowSecureFlagPolicy.NONE) {
-    window?.setSecureFlag(flag)
-}
-
-/**
- * /弹窗默认有一个白色背景，设置Compose视图，这个白色背景很碍事
- * 可以使用此方法去除背景
- *
- * 如果在DialogFragment、ComponentDialog使用Compose视图，
- * 会有个默认的白色背景，可以调用此方法去除背景。
- *
- * 在DialogFragment.onCreateDialog返回dialog时调用此方法
- * 在ComponentDialog中直接调用此方法
- */
-fun Dialog.transparentBackground() {
-    window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 }

@@ -120,37 +120,3 @@ object DialogFullScreenHelper {
     }
 }
 
-/**
- * 使用ViewBinding
- * 需要在dialog显示之后调用
- * @param layoutId Int? 你调用Dialog.setView设置的布局的id。
- * 如果传入null，则使用android.R.content中的第一个子视图进行绑定，这可能会有bug。
- * @param block T.() -> Unit 使用ViewBinding做点什么吧
- */
-inline fun <reified T : ViewBinding> Dialog.withBinding(
-    layoutId: Int? = null,
-    block: T.() -> Unit,
-) {
-    runCatching {
-        window?.let { window ->
-            val v =
-                if (layoutId != null) {
-                    window.decorView.findViewById<View>(layoutId)
-                } else {
-                    window.decorView.findViewById<FrameLayout>(R.id.content).getChildAt(0)
-                }
-            var binding: Any? = window.decorView.getTag(android.accompanist.dialoghelper.R.id.oh_view_binding)
-            val b = binding?.let {
-                it as T
-            } ?: let {
-                binding = T::class.java.getMethod("bind", View::class.java)
-                    .invoke(null, v) as T
-                binding as T
-            }
-            window.decorView.setTag(android.accompanist.dialoghelper.R.id.oh_view_binding, b)
-            b.block()
-        }
-    }.onFailure { throwable ->
-        Log.d("Dialog", "withBinding: ${throwable.cause}", throwable)
-    }
-}

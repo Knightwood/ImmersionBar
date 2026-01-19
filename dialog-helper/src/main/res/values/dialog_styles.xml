@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/apk/res-auto">
 
+    <!--全屏弹窗所需样式-->
     <style name="BaseFullscreenDialog" parent="Theme.Material3.DayNight.Dialog">
         <!--这四个配置是android:Theme.Material.NoActionBar.Fullscreen中的-->
         <item name="android:windowActionBar">false</item>
@@ -21,5 +22,28 @@
         <!-- 设置对话框进入和退出动画 -->
 <!--        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>-->
 <!--        <item name="android:windowExitAnimation">@anim/dialog_out</item>-->
+    </style>
+
+
+
+    <!--这个可以修改materialDialog的按钮样式-->
+    <style name="MaterialAlertDialogStyle1" parent="@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered" >
+        <item name="buttonBarPositiveButtonStyle">@style/Alert.Button.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Alert.Button.Negative</item>
+        <item name ="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.Material3.MyTitle</item>
+    </style>
+
+    <style name="Alert.Button.Positive" parent="Widget.Material3.Button">
+    </style>
+
+    <style name="Alert.Button.Negative" parent="Widget.Material3.Button.TextButton">
+        <!--        <item name="backgroundTint">@color/colorPrimary</item>-->
+        <!--        <item name="rippleColor">@color/colorAccent</item>-->
+        <!--        <item name="android:textColor">@android:color/white</item>-->
+        <!--        <item name="android:textSize">14sp</item>-->
+    </style>
+
+    <style name="MaterialAlertDialog.Material3.MyTitle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleSmall</item>
     </style>
 </resources>

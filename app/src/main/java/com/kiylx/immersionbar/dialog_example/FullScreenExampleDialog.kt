@@ -12,8 +12,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import android.accompanist.dialoghelper.component.FullScreenDialog
-import android.accompanist.dialoghelper.component.backgroundDim
-import android.accompanist.dialoghelper.component.setContentView
+import android.accompanist.dialoghelper.utils.backgroundDim
+import android.accompanist.dialoghelper.utils.setContentView
 
 private const val defaultDim = 0.2f
 

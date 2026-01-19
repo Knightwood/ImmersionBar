@@ -11,6 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.kiylx.immersionbar"
         minSdk = 26
+        //noinspection ExpiredTargetSdkVersion
         targetSdk = 32
         versionCode = 1
         versionName = "1.0"

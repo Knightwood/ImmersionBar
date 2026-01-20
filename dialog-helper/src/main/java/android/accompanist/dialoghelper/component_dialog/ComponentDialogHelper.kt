@@ -1,11 +1,13 @@
-package android.accompanist.dialoghelper.utils
+package android.accompanist.dialoghelper.component_dialog
 
 import android.R
+import android.accompanist.dialoghelper.utils.ViewBindingHelper
+import android.accompanist.dialoghelper.utils.WindowSecureFlagPolicy
+import android.accompanist.dialoghelper.utils.backgroundDim
+import android.accompanist.dialoghelper.utils.setSecureFlag
+import android.accompanist.dialoghelper.utils.transparentBackground
 import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -61,24 +63,22 @@ inline fun <reified T : ViewBinding> Dialog.withBinding(
                 } else {
                     window.decorView.findViewById<FrameLayout>(R.id.content).getChildAt(0)
                 }
-            var binding: Any? = window.decorView.getTag(android.accompanist.dialoghelper.R.id.oh_view_binding)
-            val b = binding?.let {
-                it as T
-            } ?: let {
-                binding = T::class.java.getMethod("bind", View::class.java)
-                    .invoke(null, v) as T
-                binding as T
+            val binding: Any? = window.decorView.getTag(android.accompanist.dialoghelper.R.id.oh_view_binding)
+            if (binding != null && binding is T) {
+                binding.block()
+            } else {
+                val b = ViewBindingHelper.bind<T>(v).getOrNull()
+                if (b != null) {
+                    window.decorView.setTag(android.accompanist.dialoghelper.R.id.oh_view_binding, b)
+                    b.block()
+                }
             }
-            window.decorView.setTag(android.accompanist.dialoghelper.R.id.oh_view_binding, b)
-            b.block()
         }
     }.onFailure { throwable ->
         Log.d("Dialog", "withBinding: ${throwable.cause}", throwable)
     }
 }
-fun a(){
 
-}
 /**
  * 使用ViewBinding加载布局，并设置给Dialog
  * 例如：
@@ -93,13 +93,10 @@ fun a(){
 inline fun <reified T : ViewBinding> Dialog.setContentView(
     block: T.() -> Unit,
 ) {
-    runCatching {
-        val method = T::class.java.getMethod("inflate", LayoutInflater::class.java)
-        val obj = method.invoke(null, LayoutInflater.from(context)) as T
-        setContentView(obj.root)
-        obj.block()
-    }.onFailure { throwable ->
-        Log.d("Dialog", "withBinding: ${throwable.cause}", throwable)
+    val binding = ViewBindingHelper.inflate<T>(context).getOrNull()
+    if (binding != null) {
+        this.setContentView(binding.root)
+        binding.block()
     }
 }
 
@@ -140,7 +137,7 @@ fun ComponentDialog.setContentView(
 /**
  *@param dim  0-1 之间 如果设置为1 就是全黑色了
  */
-fun Dialog.backgroundDim(dim: Float = 0.5f) {
+fun Dialog.backgroundDim(dim: Float = 0.3f) {
     window?.backgroundDim(dim)
 }
 
@@ -158,6 +155,4 @@ fun Dialog.setSecureFlag(flag: Int = WindowSecureFlagPolicy.NONE) {
  * 在DialogFragment.onCreateDialog返回dialog时调用此方法
  * 在ComponentDialog中直接调用此方法
  */
-fun Dialog.transparentBackground() {
-    window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-}
+fun Dialog.transparentBackground() = window?.transparentBackground()

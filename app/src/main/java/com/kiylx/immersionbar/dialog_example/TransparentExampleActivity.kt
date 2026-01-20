@@ -9,7 +9,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import android.accompanist.dialoghelper.utils.TransparentActivityHelper
+import android.accompanist.dialoghelper.activity.TransparentActivityHelper
+import android.accompanist.dialoghelper.component_dialog.backgroundDim
 import android.accompanist.dialoghelper.utils.backgroundDim
 
 class TransparentExampleActivity : ComponentActivity() {

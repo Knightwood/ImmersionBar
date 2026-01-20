@@ -26,7 +26,7 @@
 
 
 
-    <!--这个可以修改materialDialog的按钮样式-->
+    <!--这个可以修改materialDialog的按钮样式、标题样式-->
     <style name="MaterialAlertDialogStyle1" parent="@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered" >
         <item name="buttonBarPositiveButtonStyle">@style/Alert.Button.Positive</item>
         <item name="buttonBarNegativeButtonStyle">@style/Alert.Button.Negative</item>

@@ -10,6 +10,8 @@ android {
     namespace = "android.accompanist.dialoghelper"
 }
 
+version = "2.0.1"
+
 dependencies {
     implementation(libs.bundles.bundleAndroidx)
     implementation(libs.bundles.kotlins.android)

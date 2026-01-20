@@ -21,5 +21,21 @@
         <!-- 设置对话框进入和退出动画 -->
         <!--        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>-->
         <!--        <item name="android:windowExitAnimation">@anim/dialog_out</item>-->
+
+        <!--如果ComponentDialog所用style有动画，你还想用Compose中的动画作显示隐藏动画，会导致动画效果很难看，这需要将动画指定为null-->
+        <!--更好的解决办法是向谷歌学习，给Component使用一个没有parent的style。如下方注释1处 -->
+<!--        <item name="android:windowEnterAnimation">@null</item>-->
+<!--        <item name="android:windowExitAnimation">@null</item>-->
     </style>
+
+    <!--注释1-->
+    <!--compose BasicAlertDialog中使用的ComponentDialog 所用style源码-->
+<!--    <style name="DialogWindowTheme">-->
+<!--        <item name="android:windowClipToOutline">false</item>-->
+<!--    </style>-->
+<!--    <style name="FloatingDialogWindowTheme">-->
+<!--        <item name="android:windowClipToOutline">false</item>-->
+<!--        <item name="android:backgroundDimEnabled">true</item>-->
+<!--    </style>-->
+    <!--compose BasicAlertDialog中使用的ComponentDialog 所用style源码-->
 </resources>

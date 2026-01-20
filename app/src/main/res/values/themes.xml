@@ -53,4 +53,9 @@
     <style name="Theme.BlurryDialog" parent="Theme.Material3.DayNight.Dialog">
         <item name="android:windowIsTranslucent">true</item>
     </style>
+
+
+    <style name="NormalDialogTheme">
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 </resources>

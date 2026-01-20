@@ -1,24 +1,19 @@
-package android.accompanist.dialoghelper.utils
+package android.accompanist.dialoghelper.dialog
 
-import android.R
+import android.accompanist.dialoghelper.R
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowInsets
-import android.view.WindowInsetsController
 import android.view.WindowManager
-import android.widget.FrameLayout
 import androidx.activity.ComponentDialog
 import androidx.activity.addCallback
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.viewbinding.ViewBinding
 
 object DialogFullScreenHelper {
 
@@ -28,8 +23,43 @@ object DialogFullScreenHelper {
         }
     }
 
+    /**
+     * 功能与[setUp]一致，还不需使用特定style。
+     *
+     * tip:
+     * 如果需要背景有个暗色遮罩，可以在主题中启用
+     * ```
+     * <item name="android:backgroundDimEnabled">true</item>
+     * ```
+     *
+     * 或者使用代码设置暗色遮罩
+     * [android.accompanist.dialoghelper.utils.backgroundDim]
+     *
+     */
+    fun setUp2(dialog: Dialog) {
+        dialog.run {
+            window?.let { window ->
+                //使用此方法可以解决大部分问题，还不用在style中添加繁多的属性
+                WindowCompat.enableEdgeToEdge(window)
+                if (window.isFloating) {
+                    //1. 如果将windowIsFloating设置为true，则内容视图会自动调整为WRAP_CONTENT,将不会填充屏幕
+                    //因此，需要重新设置为MATCH_PARENT以使根布局撑满屏幕
+                    //2. 将Window布局设置为MATCH_PARENT，setCanceledOnTouchOutside将失效
+                    //现在默认就是MATCH_PARENT的，如果需要点击外部区域消失，需要设置为WRAP_CONTENT
+                    window.setLayout(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT
+                    )
+                }
+
+                //style中设置padding无效，只能这里设置
+                window.decorView.setPadding(0, 0, 0, 0)
+            }
+        }
+    }
+
     private fun Dialog.setWindowFlags() {
-        context.setTheme(android.accompanist.dialoghelper.R.style.BaseFullscreenDialog)
+        context.setTheme(R.style.BaseFullscreenDialog)
         val window = window ?: return
         //此标志会导致真全屏，状态栏隐藏，如果再次显示状态栏会导致布局位置跳变
         //没有此标志依旧可以沉浸，因此需要在此去除此标志，防止主题中设置此标志
@@ -44,7 +74,7 @@ object DialogFullScreenHelper {
         window.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val rootView = window.decorView.findViewById<View>(R.id.content)
+        val rootView = window.decorView.findViewById<View>(android.R.id.content)
 
         val controller = WindowCompat.getInsetsController(window, rootView)
         controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
@@ -78,7 +108,7 @@ object DialogFullScreenHelper {
     }
 
     fun Dialog.keepInsets() {
-        val contentView = findViewById<View>(R.id.content)
+        val contentView = findViewById<View>(android.R.id.content)
         contentView?.let { view ->
             // 设置根视图的 padding 来处理系统栏
             view.setOnApplyWindowInsetsListener { v, insets ->
@@ -119,4 +149,3 @@ object DialogFullScreenHelper {
         }
     }
 }
-

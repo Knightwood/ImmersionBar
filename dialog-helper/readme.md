@@ -162,6 +162,8 @@ builder.setTitle("标题")
 
 ## DialogFragment增强
 
+### ComposeDialogFragment
+
 1. 使用setContentView方法，便于在任意时刻加载布局并更改compose ui
 
 此方法使得DialogFragment使用起来近似ComponentDialog， 不必先继承DialogFragment，重新onCreateView。
@@ -172,6 +174,20 @@ dialog.setContentView {
     Text("Compose内容")
 }
 dialog.show(supportFragmentManager, "ComposeDialogFragment")
+```
+### ViewDialogFragment
+
+1. 使用setContentView方法，便于在任意时刻加载布局
+
+ ```
+ val dialog = ViewDialogFragment()
+ dialog.show(supportFragmentManager, "ComposeDialogFragment")
+ //直接加载布局id
+ dialog.setContentView(R.layout.dialog_main)
+ //或者使用ViewBinding
+ dialog.setContentView<DialogMainBinding> {
+     it.tv1.text = "微软"
+ }
 ```
 
 ## 全屏弹窗

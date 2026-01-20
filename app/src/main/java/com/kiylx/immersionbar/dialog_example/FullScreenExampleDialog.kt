@@ -11,9 +11,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import android.accompanist.dialoghelper.component.FullScreenDialog
-import android.accompanist.dialoghelper.utils.backgroundDim
-import android.accompanist.dialoghelper.utils.setContentView
+import android.accompanist.dialoghelper.component_dialog.FullScreenDialog
+import android.accompanist.dialoghelper.component_dialog.backgroundDim
+import android.accompanist.dialoghelper.component_dialog.setContentView
+import android.os.Handler
+import android.os.Looper
+import android.view.ContextThemeWrapper
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 
 private const val defaultDim = 0.2f
 
@@ -45,6 +55,42 @@ class FullScreenExampleDialog(context: Context) : FullScreenDialog(context) {
                 }
             )
         }
+    }
+}
+
+enum class DirectionState {
+    TOP,
+    LEFT,
+    RIGHT,
+    BOTTOM,
+    NONE
+}
+
+@Composable
+fun AnimateDialogContent(
+    visible: Boolean = true,
+    direction: DirectionState = DirectionState.NONE,
+    content: @Composable () -> Unit,
+) {
+    AnimatedVisibility(
+        modifier = Modifier,
+        visible = visible,
+        enter = when (direction) {
+            DirectionState.TOP -> slideInVertically(initialOffsetY = { -it })
+            DirectionState.LEFT -> slideInHorizontally(initialOffsetX = { -it })
+            DirectionState.RIGHT -> slideInHorizontally(initialOffsetX = { it })
+            DirectionState.BOTTOM -> slideInVertically(initialOffsetY = { it })
+            else -> fadeIn()
+        },
+        exit = when (direction) {
+            DirectionState.TOP -> fadeOut() + slideOutVertically(targetOffsetY = { -it })
+            DirectionState.LEFT -> fadeOut() + slideOutHorizontally(targetOffsetX = { -it })
+            DirectionState.RIGHT -> fadeOut() + slideOutHorizontally(targetOffsetX = { it })
+            DirectionState.BOTTOM -> fadeOut() + slideOutVertically(targetOffsetY = { it })
+            else -> fadeOut()
+        }
+    ) {
+        content()
     }
 }
 

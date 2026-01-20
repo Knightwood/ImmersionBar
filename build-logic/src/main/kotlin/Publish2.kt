@@ -82,7 +82,7 @@ open class Publish2 : Plugin<org.gradle.api.Project> {
                                 coordinates(
                                     groupId = "com.github.knightwood.android.accompanist",
                                     artifactId = project.name,
-                                    version = "2.0.0"
+                                    version = project.version?.toString() ?: "2.0.0"
                                 )
                             }
                             pom {

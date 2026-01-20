@@ -9,6 +9,7 @@ android {
     namespace = "android.accompanist.insetshelper"
 }
 
+version = "2.0.0"
 
 
 dependencies {

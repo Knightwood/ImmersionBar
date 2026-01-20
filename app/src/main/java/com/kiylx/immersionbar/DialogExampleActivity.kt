@@ -1,5 +1,6 @@
 package com.kiylx.immersionbar
 
+import android.accompanist.dialoghelper.component_dialog.backgroundDim
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,23 +16,33 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
-import android.accompanist.dialoghelper.fragment.ComposeDialogFragment
-import android.accompanist.dialoghelper.utils.dsl
-import android.accompanist.dialoghelper.utils.setContentView
-import android.accompanist.dialoghelper.utils.setView
-import android.accompanist.dialoghelper.utils.setInputView
-import android.accompanist.dialoghelper.utils.withBinding
+import android.accompanist.dialoghelper.dialog_fragment.ComposeDialogFragment
+import android.accompanist.dialoghelper.material_alert_dialog.dsl
+import android.accompanist.dialoghelper.component_dialog.setContentView
+import android.accompanist.dialoghelper.material_alert_dialog.setView
+import android.accompanist.dialoghelper.material_alert_dialog.setInputView
+import android.accompanist.dialoghelper.component_dialog.withBinding
+import android.accompanist.dialoghelper.dialog_fragment.ViewDialogFragment
+import android.view.Gravity
+import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kiylx.immersionbar.dialog_example.BlurActivity1
@@ -39,6 +50,11 @@ import com.kiylx.immersionbar.dialog_example.FullScreenExampleDialog
 import com.kiylx.immersionbar.dialog_example.FullScreenExampleDialogFragment
 import com.kiylx.immersionbar.dialog_example.TransparentExampleActivity
 import com.kiylx.immersionbar.databinding.DialogMainBinding
+import com.kiylx.immersionbar.dialog_example.AnimateDialogContent
+import com.kiylx.immersionbar.dialog_example.DirectionState
+import com.kiylx.immersionbar.dialog_example.TestDialogContent
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import com.google.android.material.R as MaterialR
 
 class DialogExampleActivity : FragmentActivity() {
@@ -61,6 +77,7 @@ class DialogExampleActivity : FragmentActivity() {
                         ViewBindingTest2()
                         DialogSetInputView()
                         DialogFragmentComposeUi()
+                        loadView()
                         BasicButton("透明Activity") {
                             TransparentExampleActivity.Companion.start(this@DialogExampleActivity)
                         }
@@ -68,8 +85,8 @@ class DialogExampleActivity : FragmentActivity() {
                             BlurActivity1.Companion.start(this@DialogExampleActivity)
                         }
                         setContentViewNotInOnCreate()
-                        HorizontalDivider()
-                        MaterialAlertDialogStyles()
+//                        HorizontalDivider()
+//                        MaterialAlertDialogStyles()
                     }
                 }
             }
@@ -81,14 +98,48 @@ class DialogExampleActivity : FragmentActivity() {
      */
     @Composable
     private fun setContentViewNotInOnCreate() {
+        val scope = rememberCoroutineScope()
+        var visible by remember { mutableStateOf(false) }
         BasicButton("ComponentDialog setContentView") {
-            val dialog = ComponentDialog(this@DialogExampleActivity)
+            //若要用compose中的动画作显示隐藏动画，ComponentDialog所用style不能有动画
+            val dialog = ComponentDialog(
+                this@DialogExampleActivity,
+                R.style.NormalDialogTheme
+            )
+            dialog.setCanceledOnTouchOutside(true)
+            dialog.setCancelable(true)
+            dialog.window?.let {
+                //启用edge-to-edge
+                WindowCompat.enableEdgeToEdge(it)
+                //修改窗体属性使内部视图显示在底部
+                it.attributes = it.attributes.apply {
+                    height = WindowManager.LayoutParams.WRAP_CONTENT
+                    gravity = Gravity.BOTTOM
+                }
+            }
             //dialog的setContentView可以不在onCreate中调用
             //只要在show方法调用之前调用就行
             dialog.setContentView {
-                Text("？？？")
+                AnimateDialogContent(visible, DirectionState.BOTTOM, {
+                    TestDialogContent(
+                        dismiss = {
+                            scope.launch {
+                                visible = false
+                                delay(100)
+                                dialog.dismiss()
+                            }
+                        },
+                        changeDim = {
+                            dialog.backgroundDim(it)
+                        }
+                    )
+                })
             }
-            dialog.show()
+            scope.launch {
+                dialog.show()
+                delay(100)
+                visible = true
+            }
         }
     }
 
@@ -222,6 +273,18 @@ class DialogExampleActivity : FragmentActivity() {
                 Text("Compose内容")
             }
             dialog.show(supportFragmentManager, "ComposeDialogFragment")
+        }
+    }
+
+    @Composable
+    private fun loadView() {
+        BasicButton("DialogFragment加载View") {
+            val dialog = ViewDialogFragment()
+            dialog.show(supportFragmentManager, "ComposeDialogFragment")
+//            dialog.setContentView(R.layout.dialog_main)
+            dialog.setContentView<DialogMainBinding> {
+                it.tv1.text = "微软"
+            }
         }
     }
     //</editor-fold>

@@ -1,7 +1,7 @@
-package android.accompanist.dialoghelper.component
+package android.accompanist.dialoghelper.component_dialog
 
 import android.R
-import android.accompanist.dialoghelper.utils.DialogFullScreenHelper
+import android.accompanist.dialoghelper.dialog.DialogFullScreenHelper
 import android.accompanist.dialoghelper.utils.ViewHelpers
 import android.accompanist.dialoghelper.utils.isMatchParent
 import android.content.Context
@@ -10,9 +10,11 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.activity.ComponentDialog
 import androidx.compose.runtime.Composable
+import androidx.core.view.WindowCompat
 
 private const val TAG = "FullScreenDialog"
 internal typealias ComposeUI = @Composable () -> Unit

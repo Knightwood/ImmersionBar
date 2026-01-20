@@ -1,15 +1,10 @@
-package android.accompanist.dialoghelper.utils
+package android.accompanist.dialoghelper.activity
 
 import android.R
-import android.app.Activity
 import android.graphics.Color
-import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.graphics.drawable.toDrawable
-import androidx.fragment.app.FragmentActivity
 
 object TransparentActivityHelper {
     /**

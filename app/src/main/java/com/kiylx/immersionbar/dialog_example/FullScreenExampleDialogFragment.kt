@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import android.accompanist.dialoghelper.fragment.FullScreenDialogFragment
-import android.accompanist.dialoghelper.utils.backgroundDim
+import android.accompanist.dialoghelper.dialog_fragment.FullScreenDialogFragment
+import android.accompanist.dialoghelper.component_dialog.backgroundDim
 
 /**
  * 使用DialogFragment构建一个全屏、背景透明的弹窗

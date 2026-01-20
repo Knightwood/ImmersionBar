@@ -1,5 +1,7 @@
 package android.accompanist.dialoghelper.utils
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -87,11 +89,15 @@ fun ViewGroup.LayoutParams.isWrapContent(): Boolean {
 /**
  *@param dim  0-1 之间 如果设置为1 就是全黑色了
  */
-fun Window.backgroundDim(dim: Float = 0.5f) {
+fun Window.backgroundDim(dim: Float = 0.3f) {
     if (dim != 0f) {
         setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     } else {
         clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
     setDimAmount(dim)
+}
+
+fun Window.transparentBackground() {
+    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 }

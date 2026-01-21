@@ -57,4 +57,6 @@ dependencies {
     implementation(libs.bom.androidx.ui.tooling.preview)
     implementation(libs.bom.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.compose.icon.core)
+
 }

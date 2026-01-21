@@ -134,7 +134,7 @@ open class ViewDialogFragment : DialogFragment() {
      * @param T ViewBinding类型参数
      * @param action ViewBinding操作回调
      */
-    inline fun <reified T : ViewBinding> setContentView(crossinline action: (T) -> Unit) {
+    inline fun <reified T : ViewBinding> setContentView(crossinline action: T.() -> Unit) {
         this.lifecycleScope.launch{
             lifecycle.withCreated {
                 val binding = ViewBindingHelper.inflate<T>(requireContext()).getOrNull()

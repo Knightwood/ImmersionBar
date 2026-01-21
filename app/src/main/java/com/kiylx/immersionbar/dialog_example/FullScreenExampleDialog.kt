@@ -69,6 +69,7 @@ enum class DirectionState {
 @Composable
 fun AnimateDialogContent(
     visible: Boolean = true,
+    onDismissRequest: () -> Unit,
     direction: DirectionState = DirectionState.NONE,
     content: @Composable () -> Unit,
 ) {
@@ -90,6 +91,10 @@ fun AnimateDialogContent(
             else -> fadeOut()
         }
     ) {
+        //隐藏动画执行完成，此处compose node dispose，正是dismiss dialog的时机
+        DisposableEffect(Unit) {
+            onDispose(onDismissRequest)
+        }
         content()
     }
 }

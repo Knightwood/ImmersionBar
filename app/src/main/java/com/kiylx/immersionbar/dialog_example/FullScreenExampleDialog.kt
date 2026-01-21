@@ -90,8 +90,9 @@ fun AnimateDialogContent(
             DirectionState.BOTTOM -> fadeOut() + slideOutVertically(targetOffsetY = { it })
             else -> fadeOut()
         }
-    ) {
-        //隐藏动画执行完成，此处compose node dispose，正是dismiss dialog的时机
+    ) {//1
+        //当执行隐藏，动画完成后，注释1处的内容会从ComposeNode树中消失，DisposableEffect会自动触发，
+        //当dispose时意味着动画完成，内容也从屏幕上消失，此时才能隐藏弹窗
         DisposableEffect(Unit) {
             onDispose(onDismissRequest)
         }

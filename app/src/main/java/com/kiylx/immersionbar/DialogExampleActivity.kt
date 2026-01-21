@@ -148,21 +148,24 @@ class DialogExampleActivity : FragmentActivity() {
                     gravity = Gravity.BOTTOM
                 }
             }
-            var visibility by mutableStateOf(false)
+            var visible by mutableStateOf(false)
             //dialog的setContentView可以不在onCreate中调用
             //只要在show方法调用之前调用就行
             dialog.setContentView {
                 /**
                  * 显示和隐藏动画原理：
-                 * 1. 调用show方法显示弹窗
-                 * 2. 在compose 结构中把visibility修改为true，AnimateDialogContent执行显示
-                 * 3. 当visibility修改为false时，AnimateDialogContent执行隐藏，触发onDispose，调用dismiss隐藏弹窗
+                 * 1. 调用show方法显示弹窗，此时ComposeView不会同时刻的加载完成
+                 * 2. 在ComposeView加载完成时（在Compose结构中使用副作用函数即可，ComposeView加载完成自然会执行他们）
+                 *   把visible修改为true，AnimateDialogContent执行显示
+                 * 3. 当visible修改为false时，AnimateDialogContent执行隐藏，内容会从ComposeNode树中移除，触发onDispose，此时才能调用dismiss隐藏弹窗
                  */
+                //当Dialog显示出来，ComposeView加载完成，自然走到这里，此时可以修改visible状态
                 LaunchedEffect(Unit) {
-                    visibility = true
+                    visible = true
                 }
+                //根据visible状态显示和隐藏
                 AnimateDialogContent(
-                    visible = visibility,
+                    visible = visible,
                     onDismissRequest = {
                         dialog.dismiss()
                     },
@@ -170,7 +173,7 @@ class DialogExampleActivity : FragmentActivity() {
                     content = {
                         TestDialogContent(
                             dismiss = {
-                                visibility = false
+                                visible = false
                             },
                             changeDim = {
                                 dialog.backgroundDim(it)
@@ -179,6 +182,7 @@ class DialogExampleActivity : FragmentActivity() {
                     }
                 )
             }
+            //调用show方法显示弹窗，弹窗中的ComposeView不会同时刻加载完成，我们不能再这里修改visible状态
             dialog.show()
         }
     }

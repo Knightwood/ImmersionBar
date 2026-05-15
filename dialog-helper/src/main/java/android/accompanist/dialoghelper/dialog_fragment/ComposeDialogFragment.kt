@@ -1,6 +1,7 @@
 package android.accompanist.dialoghelper.dialog_fragment
 
 import android.accompanist.dialoghelper.component_dialog.ComposeUI
+import android.accompanist.dialoghelper.component_dialog.transparentBackground
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -76,7 +77,9 @@ open class ComposeDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         if (mDialog != null) return mDialog!!
-        return super.onCreateDialog(savedInstanceState)
+        return super.onCreateDialog(savedInstanceState).also {
+            it.transparentBackground()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

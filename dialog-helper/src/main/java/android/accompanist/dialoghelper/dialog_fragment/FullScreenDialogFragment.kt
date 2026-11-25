@@ -11,6 +11,15 @@ import android.accompanist.dialoghelper.component_dialog.ComposeUI
 import android.accompanist.dialoghelper.component_dialog.FullScreenDialog
 import android.accompanist.dialoghelper.component_dialog.transparentBackground
 
+/**
+ * Full screen dialog fragment
+ *
+ * 此类实现了状态栏沉浸、全屏、点击背景dismiss等特性
+ * 由于视图直接全屏，点击外部取消特性彻底失效，这里通过onCreateDialog返回FullScreenDialog实例重新实现点击外部取消功能（复制自compose中的AlertDialog内部实现）
+ * 如不需要点击dismiss特性可以使用 FullScreenDialogFragment1或FullScreenDialogFragment2
+ *
+ * @constructor Creates a new FullScreenDialogFragment
+ */
 open class FullScreenDialogFragment : DialogFragment() {
     /**
      * DialogFragment虽然是一个Fragment，

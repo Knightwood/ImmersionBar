@@ -1,0 +1,81 @@
+# 构建脚本依赖
+[versions]
+# 版本需与 KotlinDependencyExtensions.kt 文件中embeddedKotlinVersion 版本一致
+kotlin = "2.2.10"
+agp = "8.10.0"
+ksp = "2.2.10-2.0.2"
+coroutines = "1.10.1"
+
+#room
+room_version = "2.7.0"
+androidTools = "31.4.0"
+
+semver = "2.0.0"
+jgit = "6.9.0.202403050737-r"
+compose = "1.8.2"
+
+koin = "3.5.6"
+
+[libraries]
+#######################################################################################
+# 这些都是插件的库形式，开发内置插件时需要将其作为依赖库引入，而不是用plugins块引入 #
+# 插件的库坐标
+# gradle插件的kotlin库坐标
+pluginApi-gradle-kts = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+pluginApi-kotlin-multiplatform = { module = "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin", version.ref = "kotlin" }
+pluginApi-agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+pluginApi-agp-api = { module = "com.android.tools.build:gradle-api", version.ref = "agp" }
+pluginApi-compose-compiler = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+pluginApi-ksp = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+pluginApi-compose-multiplatform = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "compose" }
+pluginApi-android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+pluginApi-room = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room_version" }
+# 这个才是vanniktech-publish插件库正确的依赖包形式，之前写错了，我说怎么一直报错找不到依赖
+vanniktech-publish-plugin = {  module = "com.vanniktech:gradle-maven-publish-plugin", version = "0.34.0" }
+
+#######################################################################################
+
+####################################自己写的插件###########################################
+pluginApi-nsis = { module = "com.github.microsoft.kmp:nsis-plugin", version = "1.0.0" }
+pluginApi-github-ci= { module ="com.github.microsoft.kmp:github-ci-plugin", version = "1.0.0" }
+pluginApi-git-version= { module ="com.github.microsoft.kmp:git-version-plugin", version = "1.0.0" }
+pluginApi-basic= { module ="com.github.microsoft.kmp:basic", version = "1.0.0" }
+pluginApi-xml-properties= { module ="com.github.knightwood.gradle.plugin.jvm-xml-properties:com.github.knightwood.gradle.plugin.jvm-xml-properties.gradle.plugin", version = "0.0.2" }
+
+#######################################################################################
+
+# 用于解析版本号-通常用于kmp项目
+semver = { module = "io.github.z4kn4fein:semver", version.ref = "semver" }
+# 使用java生成模板
+handlebarsJava = { module = "com.github.jknack:handlebars", version = "4.4.0" }
+# java-git
+jgit = { module = "org.eclipse.jgit:org.eclipse.jgit", version.ref = "jgit" }
+
+# kotlin依赖
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+# kotlin 协程
+kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlin-coroutines-debug = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-debug", version.ref = "coroutines" }
+kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlin-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+
+
+[plugins]
+publish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
+
+#application和library插件，二者都是agp插件com.android.tools.build:gradle的一部分
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+
+#compose编译器
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+# 作用相当于android中的compose bom库。可以在build.gradle.kts中使用implementation(compose.material)方式引入compose依赖
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
+
+# kotlin-android平台支持
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+# kotlin-jvm平台支持
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+# kotlin-kmp平台支持
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

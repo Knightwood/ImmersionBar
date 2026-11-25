@@ -91,7 +91,8 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 # 多平台库发布插件 0.35.0要求gradle 8.13、agp 8.2.2
-vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.35.0" }
+# 0.35.0使用publishToMavenCentral会报错，回退0.34.0
+vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
 
 [bundles]
 kotlins-android = ["kotlin-coroutines-core", "kotlin-coroutines-android"]

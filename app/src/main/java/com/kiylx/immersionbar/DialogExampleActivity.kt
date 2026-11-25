@@ -102,7 +102,8 @@ class DialogExampleActivity : FragmentActivity() {
                             BlurActivity1.Companion.start(this@DialogExampleActivity)
                         }
                         HorizontalDivider()
-
+                        Text("新全屏沉浸组件")
+                        NewFullDialogComponents()
                     }
                 }
             }
@@ -112,6 +113,26 @@ class DialogExampleActivity : FragmentActivity() {
     //<editor-fold desc="ComponentDialog">
 
 
+    @Composable
+    fun NewFullDialogComponents(){
+        Row{
+            Button(onClick = {
+                FullScreenDialog2().show(supportFragmentManager, "FullScreenUpdateDialog")
+            }) {
+                Text("弹窗")
+            }
+
+            Button(onClick = {
+                FullScreenComponentDialog(this@MainActivity)
+                    .apply {
+                        setContentView(com.github.knightwood.downloader.updater.example.R.layout.dialog_full_screen_update)
+                    }
+                    .show()
+            }) {
+                Text("弹窗")
+            }
+        }
+    }
     @Composable
     private fun ComponentDialog_FullScreen() {
         ArrowItem(text = "全屏", desc = "使弹窗全屏化") {

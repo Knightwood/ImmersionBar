@@ -5,6 +5,8 @@ import android.accompanist.dialoghelper.dialog.DialogFullScreenHelper
 import android.accompanist.dialoghelper.utils.ViewHelpers
 import android.accompanist.dialoghelper.utils.isMatchParent
 import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -14,24 +16,26 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.activity.ComponentDialog
 import androidx.compose.runtime.Composable
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.updatePadding
 
 private const val TAG = "FullScreenDialog"
 internal typealias ComposeUI = @Composable () -> Unit
 
 /**
  * 使用此Dialog,不要传入自定义主题
+ *
+ * 由于视图直接全屏，点击外部取消特性彻底失效，这里重新实现点击外部取消功能（复制自compose中的AlertDialog内部实现）
  */
-open class FullScreenDialog(context: Context) : ComponentDialog(context) {
+open class FullScreenDialog(context: Context) : BasicFullScreenComponentDialog(context) {
     /**
      * Dialog内部的mCancelable默认值就是true
      * 所以这里也默认为true
      */
     private var cancelable = true
-
-    init {
-        DialogFullScreenHelper.setUp(this)
-    }
 
     /**
      *在Window使用了MATCH_PARENT时失效

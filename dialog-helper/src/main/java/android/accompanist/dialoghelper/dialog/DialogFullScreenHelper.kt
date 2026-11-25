@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 
 object DialogFullScreenHelper {
 
+    @Deprecated("实现中由很多设置不必要，请直接参考BasicFullScreenComponentDialog")
     fun setUp(dialog: Dialog) {
         dialog.run {
             setWindowFlags()
@@ -36,6 +37,7 @@ object DialogFullScreenHelper {
      * [android.accompanist.dialoghelper.utils.backgroundDim]
      *
      */
+    @Deprecated("实现中由很多设置不必要，请直接参考BasicFullScreenComponentDialog")
     fun setUp2(dialog: Dialog) {
         dialog.run {
             window?.let { window ->
@@ -107,29 +109,35 @@ object DialogFullScreenHelper {
         (window.decorView as? ViewGroup)?.disableClipping()
     }
 
+    /**
+     * Keep insets on the receiver [Dialog]
+     *
+     * 使用此方法让视图内容不被系统栏遮挡
+     */
     fun Dialog.keepInsets() {
         val contentView = findViewById<View>(android.R.id.content)
         contentView?.let { view ->
             // 设置根视图的 padding 来处理系统栏
-            view.setOnApplyWindowInsetsListener { v, insets ->
+            view.setOnApplyWindowInsetsListener { v, windowInsets ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    val insets =windowInsets.getInsets(WindowInsets.Type.systemBars())
                     // 仍然为系统栏留出空间，而不是覆盖它们
                     v.setPadding(
-                        insets.getInsets(WindowInsets.Type.systemBars()).left,
-                        insets.getInsets(WindowInsets.Type.systemBars()).top,
-                        insets.getInsets(WindowInsets.Type.systemBars()).right,
-                        insets.getInsets(WindowInsets.Type.systemBars()).bottom
+                        insets.left,
+                        insets.top,
+                        insets.right,
+                        insets.bottom
                     )
                 } else {
                     @Suppress("DEPRECATION")
                     v.setPadding(
-                        insets.systemWindowInsetLeft,
-                        insets.systemWindowInsetTop,
-                        insets.systemWindowInsetRight,
-                        insets.systemWindowInsetBottom
+                        windowInsets.systemWindowInsetLeft,
+                        windowInsets.systemWindowInsetTop,
+                        windowInsets.systemWindowInsetRight,
+                        windowInsets.systemWindowInsetBottom
                     )
                 }
-                insets
+                windowInsets
             }
 
             // 请求应用窗口插入

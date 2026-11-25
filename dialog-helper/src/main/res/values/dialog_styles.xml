@@ -23,8 +23,10 @@
 <!--        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>-->
 <!--        <item name="android:windowExitAnimation">@anim/dialog_out</item>-->
     </style>
-
-
+    <style name="BaseFullscreenDialog2" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
 
     <!--这个可以修改materialDialog的按钮样式、标题样式-->
     <style name="MaterialAlertDialogStyle1" parent="@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered" >

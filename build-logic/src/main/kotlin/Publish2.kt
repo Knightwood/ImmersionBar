@@ -4,19 +4,13 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
+import com.vanniktech.maven.publish.*
 
-val org.gradle.api.Project.`publishing`: org.gradle.api.publish.PublishingExtension
-    get() =
-        (this as org.gradle.api.plugins.ExtensionAware).extensions.getByName("publishing") as org.gradle.api.publish.PublishingExtension
-
-fun org.gradle.api.Project.publishing(configure: Action<PublishingExtension>): Unit =
+fun org.gradle.api.Project.publishing(configure: Action<org.gradle.api.publish.PublishingExtension>): Unit =
     (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("publishing", configure)
 
 fun org.gradle.api.Project.mavenPublishing(configure: Action<com.vanniktech.maven.publish.MavenPublishBaseExtension>): Unit =
-    (this as org.gradle.api.plugins.ExtensionAware).extensions.configure(
-        "mavenPublishing",
-        configure
-    )
+    (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("mavenPublishing", configure)
 
 fun org.gradle.api.Project.`kotlin`(configure: Action<org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension>): Unit =
     (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("kotlin", configure)
@@ -72,36 +66,24 @@ open class Publish2 : Plugin<org.gradle.api.Project> {
                                 url = uri("F:/.m2/repository")
                             }
                         }
-
-                        mavenPublishing {
-                            configure(
-                                AndroidSingleVariantLibrary()
-                            )
-                            publishToMavenCentral()
-                            afterEvaluate {
-                                coordinates(
-                                    groupId = "com.github.knightwood.android.accompanist",
-                                    artifactId = project.name,
-                                    version = project.version?.toString() ?: "2.0.0"
-                                )
-                            }
-                            pom {
-                                name.set(project.name)
-                                description.set("some toolkit library for android")
-                            }
-                        }
-//                        afterEvaluate {
-//                            publications {
-//                                register<MavenPublication>("maven") {
-//                                    groupId = "com.github.knightwood.android.accompanist"
-//                                    artifactId = project.name
-//                                    version = "2.0.0"
-//                                    from(components.getByName("release"))
-//                                }
-//                            }
-//                        }
                     }
-                }
+                    mavenPublishing  {
+                        configure(
+                            AndroidSingleVariantLibrary()
+                        )
+                        publishToMavenCentral()
+                        afterEvaluate {
+                            coordinates(
+                                groupId = "com.github.knightwood.android.accompanist",
+                                artifactId = project.name,
+                                version = project.version.toString() ?: "2.0.0"
+                            )
+                        }
+                        pom {
+                            name.set(project.name)
+                            description.set("some toolkit library for android")
+                        }
+                    }                }
             } else {
                 println("project: ${project.name} no android plugin")
             }

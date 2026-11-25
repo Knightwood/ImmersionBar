@@ -1,13 +1,15 @@
 plugins {
     //`kotlin-dsl` 即 id("org.gradle.kotlin.dsl") 用于gradle kts支持
     `kotlin-dsl`
+    alias(libs.plugins.kotlin.jvm) //kotlin-jvm平台支持
+    alias(libs.plugins.publish)  //publish插件
 }
 
 dependencies {
     //版本需与 KotlinDependencyExtensions.kt 文件中embeddedKotlinVersion 版本一致
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20")
-    implementation("com.vanniktech:gradle-maven-publish-plugin:0.35.0")
-    implementation("com.android.tools.build:gradle:8.10.0")
+    implementation(libs.pluginApi.gradle.kts)
+    implementation(libs.vanniktech.publish.plugin)
+    implementation(libs.pluginApi.agp)
 }
 
 gradlePlugin {
